@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Brick Car</string>
+
+    <string name="score_and_high_score">Score: \n%s \nHigh Score: \n%s</string>
+    <string name="play">Play</string>
+    <string name="instructions">Instructions</string>
+    <string name="instructions_guide">
+        • Tapping any part of the screen will change the position of your car.
+        \n\n• Holding any part of the screen will accelerate the speed and when you release it,
+        it will change the position of the car.
+    </string>
+    <string name="resume">Resume</string>
+    <string name="restart">Restart</string>
+    <string name="game_paused">Game Paused</string>
+    <string name="game_over">Game Over</string>
+
+</resources>
