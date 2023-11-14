@@ -68,32 +68,6 @@ class GameState {
         }
     }
 
-    fun onGameEvent(event: GameEvent) {
-        when (event) {
-            is GameEvent.PlayOrResume -> {
-                gameStatus = GameStatus.Running
-            }
-            is GameEvent.Pause -> {
-                gameStatus = GameStatus.Paused
-            }
-            is GameEvent.Restart -> {
-                restartGame()
-            }
-            is GameEvent.VelocityChanged -> {
-                changeVelocity(event.accelerate)
-            }
-            is GameEvent.HighScoreChanged -> {
-                highScore = event.highScore
-            }
-            is GameEvent.ChangePlayerCarPosition -> {
-                changePlayerCarPosition()
-            }
-            is GameEvent.MoveEnemyCars -> {
-                moveEnemyCars()
-            }
-        }
-    }
-
     private fun generateBoardSize() {
         val width = carSize.width * 3
         val height = distanceBetweenCars * 2
@@ -135,8 +109,30 @@ class GameState {
         )
     }
 
-    private fun changeVelocity(accelerate: Boolean) {
-        velocity = if (accelerate) Velocity.Accelerated else Velocity.Normal
+    fun onGameEvent(event: GameEvent) {
+        when (event) {
+            is GameEvent.PlayOrResume -> {
+                gameStatus = GameStatus.Running
+            }
+            is GameEvent.Pause -> {
+                gameStatus = GameStatus.Paused
+            }
+            is GameEvent.Restart -> {
+                restartGame()
+            }
+            is GameEvent.VelocityChanged -> {
+                changeVelocity(event.accelerate)
+            }
+            is GameEvent.HighScoreChanged -> {
+                highScore = event.highScore
+            }
+            is GameEvent.ChangePlayerCarPosition -> {
+                changePlayerCarPosition()
+            }
+            is GameEvent.MoveEnemyCars -> {
+                moveEnemyCars()
+            }
+        }
     }
 
     private fun restartGame() {
@@ -144,6 +140,10 @@ class GameState {
         enemyCars.clear()
         initCars()
         gameStatus = GameStatus.Running
+    }
+
+    private fun changeVelocity(accelerate: Boolean) {
+        velocity = if (accelerate) Velocity.Accelerated else Velocity.Normal
     }
 
     private fun changePlayerCarPosition() {
@@ -185,6 +185,16 @@ class GameState {
         resetEnemyCarsPositions()
     }
 
+    private fun checkCollision() {
+        enemyCars.forEach { enemyCar ->
+            val hasCollision = playerCar.collidesWith(enemyCar)
+            if (hasCollision) {
+                gameStatus = GameStatus.GameOver
+                return
+            }
+        }
+    }
+
     private fun resetEnemyCarsPositions() {
         val (enemyCar1, enemyCar2, enemyCar3) = enemyCars
         val borderLimit = boardSize.height
@@ -219,16 +229,6 @@ class GameState {
                     y = -distanceBetweenCars
                 )
             )
-        }
-    }
-
-    private fun checkCollision() {
-        enemyCars.forEach { enemyCar ->
-            val hasCollision = playerCar.collidesWith(enemyCar)
-            if (hasCollision) {
-                gameStatus = GameStatus.GameOver
-                return
-            }
         }
     }
 }
